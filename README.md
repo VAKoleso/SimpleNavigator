@@ -1,8 +1,6 @@
 # SimpleNavigator
 
-Implementation of the Simple Navigator project.
-
-The russian version of the task can be found in the repository.
+Реализация проекта Simple Navigator.
 
 
 ## Contents
@@ -12,257 +10,183 @@ The russian version of the task can be found in the repository.
 2. [Chapter II](#chapter-ii) \
     2.1. [Information](#information)
 3. [Chapter III](#chapter-iii) \
-    3.1. [Part 1](#part-1-depth--and-breadth-first-search)  
-    3.2. [Part 2](#part-2-finding-the-shortest-paths-in-a-graph)  
-    3.3. [Part 3](#part-3-finding-the-minimum-spanning-tree)  
-    3.4. [Part 4](#part-4-travelling-salesman-problem)  
-    3.5. [Part 5](#part-5-console-interface)  
-    3.6. [Part 6](#part-6-bonus-comparison-of-methods-for-solving-the-traveling-salesman-problem)  
+    3.1. [Part 1](#part-1-обход-графа-в-глубину-и-в-ширину)  
+    3.2. [Part 2](#part-2-поиск-кратчайших-путей-в-графе)  
+    3.3. [Part 3](#part-3-поиск-минимального-остовного-дерева)  
+    3.4. [Part 4](#part-4-задача-коммивояжера)  
+    3.5. [Part 5](#part-5-консольный-интерфейс)  
+    3.6. [Part 6](#part-6-дополнительно-сравнение-методов-решения-задачи-коммивояжера)  
 4. [Chapter IV](#chapter-iv)
-
-
-## Chapter I
 
 ![SimpleNavigator](misc/images/A2_SimpleNavigator.JPG)
 
-`-` "We're transferring you to another project," Robert said, which sounded like a verdict. Eve was standing in the middle of her boss's office again. She couldn't understand the reason for this decision at all. "Finish your pathfinding task, then gather up all the work you've done and give it to Alice. From now on, her department will be in charge of this."
+## Введение
 
-`-` "But why," Eve began to say, but Robert M.'s forceful tone interrupted her.
+В данном проекте Нам предстояло реализовать несколько основных алгоритмов на графах. Графы являются одной из базовых структур данных в программировании, которая используется повсеместно. В виде графов можно, например, интерпретировать схемы дорог, электрические цепи, географические карты, связи между людьми в социальных сетях и многое, многое другое.  
 
-`-` "Because there are more important tasks for you. Here's Alice, by the way." The girl at the door was not the same Eve had known before, her face looked tired, and she wasn't even trying to hide the black circles under her eyes. Since her last visit to Bob, Eve hadn't had a chance to talk to her or Charlie because she hadn't seen them in the office.
+## Информация
 
-`-` "Good afternoon, boss. Hello, Eve," said Alice surprisingly cheerful.
+### Историческая справка
 
-`-` "Come in, Eve and I are almost finished. She is about to gather up her work and hand it over to you. Eve, when you're done, come back, and we'll talk about what to do next. You can go now, and don't forget to close the door. "
+Родоначальником теории графов принято считать математика Леонарда Эйлера (1707-1783). Историю возникновения этой теории можно проследить по переписке великого ученого. Вот перевод латинского текста, который взят из письма Эйлера к итальянскому математику и инженеру Маринони, отправленного из Петербурга 13 марта 1736 года:
 
-Eve gave a confused nod and headed to the door. She stopped in the hallway for a moment and wondered how unfair it was that her little research project was being given to someone else's department, leaving her out of the loop. She could hear a muffled conversation between Bob and Alice from behind the door:
+>Некогда мне была предложена задача об острове, расположенном в городе Кенигсберге и окруженном рекой, через которую перекинуто семь мостов.
 
-`-` "We lost him for good. Whether he's laying low or just waiting for something, I don't know. But that's why..."
+Возникший в XIII веке город Кёнигсберг (ныне Калининград) состоял из трёх формально независимых городских поселений и ещё нескольких «слобод» и «посёлков». Расположены они были на островах и берегах реки Прегель, делящей город на четыре главные части: А) Альтштадт, Б) Кнайпхоф, В) Ломзе, Г) Форштанд. Для связи между городскими частями уже в XIV веке стали строить мосты. В связи с постоянной военной опасностью мосты имели оборонные качества. Мосты были местом шествий, религиозных и праздничных процессий, по мостам проходили православные крестные ходы. Карта этой местности и её упрощённая схема представлены на рисунках ниже.
 
-"I'll have to talk to Alice when she comes to pick up the work. Everything's so weird", Eve decided to herself. With a tired sigh, she went to her place while thoughts about seven bridges of Königsberg swirled in her head.
-
-
-## Introduction
-
-In this project you will implement several basic algorithms on graphs. Graphs are one of the basic data structures in programming that are used everywhere. Graphs can be used, for example, to interpret road maps, electrical circuits, geographic maps, for communication between people in social networks, and many other things.  
-
-
-## Chapter II
-
-## Information
-
-### Historical background
-
-Leonard Euler (1707-1783) is the founder of the graph theory. The origin of this theory can be traced back to the correspondence of the great scholar. Here is a translation of the Latin text, which is cited from a letter Euler sent from St. Petersburg on March 13, 1736, to the Italian mathematician and engineer Marinoni:
-
->A problem was posed to me about an island in the city of Königsberg, surrounded by a river spanned by seven bridges.
-
-The city of Königsberg (now Kaliningrad), founded in the 13th century, consisted of three formally independent urban settlements and several other "slobodas" and "settlements". They were set on the islands and riversides of the Pregel, dividing the city into four main parts: A) Altstadt, B) Kneiphof, C) Lomse, D) Vorstadt. The construction of bridges began in the 14th century to connect these parts of the city. Due to the constant military danger, bridges had defensive qualities. The bridges were a place of demonstrations, religious and festive processions, along with orthodox cross processions. Here is a map of the area and its simplified scheme:
- 
 ![konigsberg-map](misc/images/konigsberg-map.png)
 
 ![simple-konigsberg-map](misc/images/simple-konigsberg-map.png)
 
->I was asked whether someone could traverse the separate bridges in a connected walk in such a way that each bridge is crossed only once. I was informed that hitherto no-one had demonstrated the possibility of doing this, or shown that it is impossible. This question is so banal, but seemed to me worthy of attention in that neither geometry, nor algebra, nor even the art of counting was sufficient to solve it. And so, after some deliberation, I obtained a simple, yet completely established, rule with whose help one can immediately decide for all examples of this kind, with any number of bridges in any arrangement, whether such a round trip is possible, or not. 
-
-You can see how Königsberg bridges are situated in the following picture, where the vertices of the graph correspond to a certain part of the city, and the edges correspond to bridges over the river, where A is an island, and B, C and D are parts of the continent, separated from each other by arms of the river.
+>Спрашивается, может ли кто-нибудь непрерывно обойти их, проходя только однажды через каждый мост. И тут же мне было сообщено, что никто еще до сих пор не мог это проделать, но никто и не доказал, что это невозможно. Вопрос этот, хотя и банальный, показался мне, однако, достойным внимания тем, что для его решения недостаточны ни геометрия, ни алгебра, ни комбинаторное искусство. После долгих размышлений я нашел легкое правило, основанное на вполне убедительном доказательстве, с помощью которого можно во всех задачах такого рода тотчас же определить, может ли быть совершен такой обход через какое угодно число и как угодно расположенных мостов или не может. Кенигсбергские же мосты расположены так, что их можно представить на следующем рисунке, где вершины графа соответствуют определённому району города, а ребра – мостам через реку, на котором A обозначает остров, а B, C и D – части континента, отделенные друг от друга рукавами реки.
 
 ![konigsberg-graph](misc/images/konigsberg-graph.png)
 
-So is it possible to traverse the Königsberg bridges by crossing each of these bridges only once? To find the answer, let's continue with Euler's letter to Marinoni:
+Так можно ли обойти Кенигсбергские мосты, проходя только один раз через каждый из этих мостов? Чтобы найти ответ, продолжим письмо Эйлера к Маринони: 
 
->The question is to determine whether it is possible to get around all these seven bridges, passing through each only once, or not. My rule leads to the following solution to this question. First of all, you need to look at how many sections are separated by water, - such that there is no other way from one to another, except through the bridge. In this example, there are four such sections - A, B, C, D. Next, you need to distinguish whether the number of bridges leading to these individual sections is even or odd. So, in our case, five bridges lead to section A, and three bridges to the rest, i.e. the number of bridges leading to individual sections is odd, and this one is already enough to solve the problem. When this is determined, we apply the following rule: if the number of bridges leading to each individual section were even, then the bypass, about which in question, would be possible, and at the same time it would be possible to start this detour from any section. If, however, two of these numbers were odd, for only one cannot be odd, even then the transition could take place, as prescribed, but only the beginning of the detour must necessarily be taken from one of those two sections to which an odd number of bridges leads. If, finally, there were more than two sections to which an odd number of bridges leads, then such a movement is generally impossible ... if other, more serious problems could be cited here, this method could be even more useful and should not be neglected
+>Вопрос состоит в том, чтобы определить, можно ли обойти все эти семь мостов, проходя через каждый только однажды, или нельзя. Мое правило приводит к следующему решению этого вопроса. Прежде всего, нужно смотреть, сколько есть участков, разделенных водой, – таких, у которых нет другого перехода с одного на другой, кроме как через мост. В данном примере таких участков четыре – A, B, C, D. Далее нужно различать, является ли число мостов, ведущих к этим отдельным участкам, четным или нечетным. Так, в нашем случае к участку A ведут пять мостов, а к остальным – по три моста, т. е. число мостов, ведущих к отдельным участкам, нечетно, а этого одного уже достаточно для решения задачи. Когда это определено, применяем следующее правило: если бы число мостов, ведущих к каждому отдельному участку, было четным, то тогда обход, о котором идет речь, был бы возможен, и в то же время можно было бы начать этот обход с любого участка. Если же из этих чисел два были бы нечетные, ибо только одно быть нечетным не может, то и тогда мог бы совершиться переход, как это предписано, но только начало обхода непременно должно быть взято от одного из тех двух участков, к которым ведет нечетное число мостов. Если бы, наконец, было больше двух участков, к которым ведет нечетное число мостов, то тогда такое движение вообще невозможно… если можно было привести здесь другие, более серьезные задачи, этот метод мог бы принести еще большую пользу и им не следовало бы пренебрегать
 
-We can paraphrase the author's words and formulate the following rules:
-1) The number of odd vertices (vertices to which an odd number of edges lead) of a graph must be even.
-There cannot be a graph that has an odd number of odd vertices.
-2) If all vertices of a graph are even (vertices that are led to by an odd number of edges), you can draw the graph without taking your pencil off the paper, and you can start from any vertex of the graph and end it at the same vertex.
-3) A graph with more than two odd vertices cannot be drawn with a single stroke.
+Перефразируя слова автора, можно сформулировать следующие правила:
+1) Число нечётных вершин (вершин, к которым ведёт нечётное число рёбер) графа должно быть чётно. Не может существовать граф, который имел бы нечётное число нечётных вершин.
+2) Если все вершины графа чётные (вершины, к которым ведёт нечётное число рёбер), то можно, не отрывая карандаша от бумаги, начертить граф, при этом можно начинать с любой вершины графа и завершить его в той же вершине.
+3) Граф с более чем двумя нечётными вершинами невозможно начертить одним росчерком.
 
-The Königsberg bridge graph had four odd vertices, hence, it is impossible to traverse all the bridges without passing over any of them twice.
+Граф кёнигсбергских мостов имел четыре нечётные вершины, следовательно, невозможно пройти по всем мостам, не проходя ни по одному из них дважды.
 
-Until the beginning of the 20th century, graph theory was developing mainly in the formulation of new theorems based on the results of solving various 'puzzle problems'. Graph theory was seriously developed due to the emergence of large-scale mass production and general breakthroughs in science and technology in the first half of the 20th century.  
+Далее, вплоть до начала 20-го века теория графов развивалась в основном в виде формулирования новых теорем, сформированных по результатам решения различных "задач-головоломок". Серьезное развитие теория графов получила в связи с возникновением массового крупносерийного производства, общим всплеском науки и технологий в первой половине 20-го века.
 
-### Main terms
+### Основные определения
 
-A **Graph** has a finite set of vertices, and a set of edges. Each edge has two points from the set of graph vertices that form the edge points.
+**Граф** - это совокупность конечного множества вершин и множества ребер. Каждому ребру сопоставлены две точки из множества вершин графа, образующие граничные точки ребра.
 
-**Types of graphs based on the type of edges:**
-* *undirected* - a graph in which movement between vertices connected by an edge is possible in any direction
+**Виды графов по типу рёбер:**
+* *неориентированный* - граф, в котором перемещение между вершинами, соединёнными ребром, возможно в любом направлении
 
 ![not-orient-graph](misc/images/not-orient-graph.png)
 
-* *directed* - a graph, the edges of which have a direction. Directed edges are also called arcs. Moving from one vertex to another is possible only by arcs of corresponding direction
+* *ориентированный* - граф, рёбрам которого присвоено направление. Направленные рёбра именуются также дугами. Перемещение из одной вершины в другую возможно только по дугам соответствующего направления
 
 ![orient-graph](misc/images/orient-graph.png)
 
-If besides the edge between two vertices, the weight of the edge is also given, then such a graph is called ***weighted***.
+Если помимо наличия ребра между двумя вершинами, задан ещё и вес ребра, то такой граф называется ***взвешенным***
 
 ![weighted-orient-graph](misc/images/weighted-orient-graph.png)
 
 
-**Types of graphs based on the number of edges:**
-* a *null graph* is a graph in which there are no edges
+**Виды графов по числу рёбер:**
+* *нулевой* - в графе отсутствуют рёбра
 
 ![null-graph](misc/images/null-graph.png)
 
-* *incomplete* - the graph has edges, but not from every vertex, there is an edge to every other vertex
+* *неполный* - в графе есть рёбра, но не из каждой вершины, есть ребро в любую другую вершину
 
 ![not-full-graph](misc/images/not-full-graph.png)
 
-* *complete* - the graph has an edge from each vertex to any other vertex
+* *полный* - в графе из каждой вершины есть ребро в любую другую вершину
 
 ![full-graph](misc/images/full-graph.png)
 
 
-**Types of graphs based on node reachability:**
-
-* *connected* - for any vertex in the graph there is at least one path to any other vertex in the same graph
+**Виды графов по достижимости узлов:**
+* *связный* - для любой вершины в графе есть хотя бы один путь до любой другой верины в этом же графе
 
 ![linked-graph](misc/images/linked-graph.png)
 
-* *disconnected* - the graph has no path between at least two vertices
+* *несвязный* - в графе отсутствует путь хотя бы между двумя его вершинами
 
 ![not-linked-graph](misc/images/not-linked-graph.png)
 
-For directed graphs there are two more types of connectivity: *strongly connected* and *weakly connected*.
-* *strongly connected* - there is a path for any vertex in a directed graph to any other vertex and back. 
-* *weakly connected* - there is a path between any two vertices in the graph, but this path can be one-sided.
-It means that from vertex A to vertex B the path can exist, but not the opposite way.
+Для ориентированных графов дополнительно разделяют ещё два типа связности: *сильносвязный* и *слабосвязный*.
+* *сильносвязный* - для любой вершины в ориентированном графе существует путь в любую другую вершину и обратно.
+* *слабосвязный* - между двумя любыми вершинами в графе существует путь, но этот путь может быть односторонним. Т.е. из вершины А в вершину B путь может существовать, а обратно нет.
 
+**Деревья**
 
-**Trees**
-
-An important subtype of graphs are *trees*. \
-***A tree*** is a connected acyclic graph in which any two vertices are connected by only one path. The following formula is the same for any tree: *q = n - 1*, where q is the number of edges, n is the number of vertices of the graph (tree). Trees can be built on the basis of both undirected and directed graphs, depending on the problem to be solved.
+Отдельным важным подтипом графов являются *деревья*. \
+***Дерево*** - это связный ациклический граф, в котором любые две вершины соединены лишь одним маршрутом. Для любого дерева справедлива следующая формула: *q = n - 1*, где q - это число рёбер, n - число вершин графа (дерева). Деревья могут быть построены на базе как неориентированных графов, так и ориентированных, в зависимости от решаемой задачи.
 
 ![tree](misc/images/tree.png)
 
-***A spanning tree*** is a subgraph of a given graph that includes all its vertices and is a tree. The graph edges that are not part of the spanning tree are called chords of the graph relative to the spanning tree.
+***Остовное дерево (остов)*** — это подграф данного графа, содержащий все его вершины и являющийся деревом. Рёбра графа, не входящие в остов, называются хордами графа относительно остова.
 
 ![spanning-tree](misc/images/spanning-tree.png)
 
+### Способы задания графа
 
-### Ways of representing a graph
+Существуют следующие основные способы задания графов:
+* *матрица смежности* - квадратная матрица, размерность которой равна числу вершин в графе, и в которой $`A_{ij}`$ элемент матрицы содержит в себе информацию о ребре из вершины $`i`$ в вершину $`j`$. Возможные значения, которые может принимать $`A_{ij}`$:
+    + для невзвешенного неориентированного графа: 
+        - 0 - ребра между вершинами нет
+        - 1 - ребро между вершинами есть  
+    + для взвешенного неориентированного графа: 
+        - 0 - ребра между вершинами нет 
+        - N - ребро между вершинами есть, и его вес равен N 
+    + для невзвешенного ориентированного графа: 
+        - 0 - дуги между вершинами нет
+        - 1 - есть дуга (ориентированное ребро), которая направлена из вершины $`i`$ в вершину $`j`$
+    + для взвешенного ориентированного графа: 
+        - 0 - дуги между вершинами нет
+        - N - есть дуга (ориентированное ребро), которая направлена из вершины $`i`$ в вершину $`j`$, и её вес равен N
+* *матрица инцидентности* - это матрица, количество строк в которой соответствует числу вершин, а количество столбцов – числу рёбер. В ней указываются связи между инцидентными элементами графа (ребро (дуга) и вершина). В неориентированном графе если вершина инцидентна ребру, то соответствующий элемент равен 1, в противном случае элемент равен 0. В ориентированном графе если ребро выходит из вершины, то соответствующий элемент равен 1, если ребро входит в вершину, то соответствующий элемент равен -1, если ребро отсутствует, то элемент равен 0.
 
-The main ways of representing graphs are:
-* *an adjacency matrix* is a square matrix whose dimension is equal to the number of vertices in the graph, and in which $`A_{ij}`$ element of the matrix contains information about an edge from vertex $`i`$ to vertex $`j`$. Possible values that $`A_{ij}`$ can have:
-    + for an unweighted undirected graph:
-        - 0 - there is no edge between the vertices
-        - 1 - there is an edge between the vertices
-    + for a weighted undirected graph:
-        - 0 - there is no edge between the vertices
-        - N - there is an edge between vertices, and its weight is N
-    + for an unweighted directed graph:
-        - 0 - there is no arc between the vertices
-        - 1 - there is an arc (directed edge), which is directed from vertex $`i`$ to vertex $`j`$.
-    + for a weighted directed graph:
-        - 0 - there is no arc between the vertices
-        - N - there is an arc (directed edge), which is directed from vertex $`i`$ to vertex $`j`$, and its weight is N
-* *an incidence matrix* is a matrix with the number of rows equal to the number of vertices, and the number of columns equal to the number of edges. It specifies the connections between the incident elements of the graph (edge (arc) and vertex). In an undirected graph if a vertex is incident to an edge then the corresponding element is 1, otherwise the element is 0. In a directed graph if an edge comes from a vertex then the corresponding element is 1, if the edge enters a vertex then the corresponding element is -1, if there is no edge then the element is 0.
+Пример задания графа с помощью матрицы смежности можно найти в материалах.
 
-You can find an example of representing a graph with an adjacency matrix in the materials.
+Если количество ребер графа по сравнению с количеством вершин невелико, то значения большинства элементов матрицы смежности будут равны 0. При этом использование данного метода нецелесообразно. Для подобных графов имеются более оптимальные способы их представления:
 
-If the number of graph edges is small compared to the number of vertices, the values of most elements of the adjacency matrix will be 0. In this case it is not reasonable to use this method. For such graphs there are more appropriate ways to represent them:
+* *список смежности* - один из способов представления графа в виде коллекции списков вершин. Каждой вершине графа соответствует список, состоящий из «соседей» (т.е. из вершин, которые непосредственно достижимы напрямую из текущей вершины) этой вершины с указанием весов рёбер.
+* *список рёбер* - таблица (матрица размерность Nx3), в каждой строке которой записаны две смежные вершины и вес, соединяющего их ребра.
 
-* *an adjacency list* is one of the ways to represent a graph as a collection of lists of vertices. Each vertex of the graph corresponds to a list consisting of "neighbors" (i.e. vertices that are directly reachable from the current vertex) of this vertex with edge weights.
-* *list of edges* is a table (matrix of dimension Nx3), each row of which contains two adjacent vertices, and the weight of the edge that connects them.
+В рамках данного задания все графы удовлетворяют следующим требованиям:
+- Веса ребер только натуральными числами
+- Могут быть петли
+- Веса могут отличаться на всех ребрах
+- Только ненулевой связный граф
+
+## Обход графа в глубину и в ширину
+
+* Библиотеки разработаны на языке С++ стандарта C++17 
+* При написании кода придерживались Google Style
+* Решение оформлено как статическая библиотека
+* Библиотека s21_graph.h и s21_graph_algorithms.h представлена в виде класса `Graph`, который хранит в себе информацию о графе с помощью **матрицы смежности**. Размерность матрицы смежности задается динамически при инициализации графа (при его загрузке из файла)
+* Библиотека s21_graph_algorithms.h представлена в виде класса `GraphAlgorithms`, который будет содержать в себе реализацию алгоритмов на графах. При этом сам класс `GraphAlgorithms` ничего не знает о внутреннем представлении графа из класса `Graph`. Для взаимодействия с данными графа класс `GraphAlgorithms` используются только публичные методы и свойства, предоставляемые классом `Graph`.
+* Сборка программы настроена с помощью Makefile со стандартным набором целей для GNU-программ: _all, clean, test, s21_graph.a_, s21_graph_algorithms.a_
+* Обеспечено покрытие unit-тестами методов класса `Graph` и `GraphAlgorithms`
 
 
-## Chapter III
 
-Within this task, all graphs must meet the following requirements:
-- Edge weights are only natural numbers
-- There may be loops
-- Weights may differ on all edges
-- Only a nonzero connected graph
+* Класс `Graph` содержит в себе следующие публичные методы:
+    + `loadGraphFromFile(string filename)` - загрузка графа из файла в формате матрицы смежности
+    + `exportGraphToDot(string filename)` - выгрузка графа в файл в формате dot (см. материалы)
 
-## Part 1. Depth- and Breadth-first search 
 
-Implementation of the _s21_graph.h_  library:  
-* The library must be developed in C++ language of C++17 standard
-* The library code must be located in the src folder in the develop branch  
-* When writing code it is necessary to follow the Google style
-* Make it as a static library (with the _s21_graph.h_ header file)
-* The library must be represented as a `Graph` class that stores information about the graph using an **adjacency matrix**. The dimensionality of the adjacency matrix should be set dynamically when initializing the graph (when loading it from a file)
-* The program must be built with Makefile which contains standard set of targets for GNU-programs: _all, clean, test, s21_graph.a_
-*Prepare full coverage of the `Graph` class methods with unit-tests
-* The class `Graph` must contain at least the following public methods:
-    + `loadGraphFromFile(string filename)` - loading a graph from a file in the adjacency matrix format
-    + `exportGraphToDot(string filename)`- exporting a graph to a dot file (see materials)
-
-Implementation of the _s21_graph_algorithms.h_ library:  
-* The library must be developed in C++ language of C++17 standard
-* The library code must be located in the src folder in the develop branch  
-* Make it as a static library (with the _s21_graph_algorithms.h_ header file)
-* The library must be represented as a ` GraphAlgorithms ` class that stores the implementation of algorithms on graphs. The class `GraphAlgorithms` itself must not know anything about the internal representation of the graph from the class `Graph`. To interact with graph data, the class `GraphAlgorithms` can only use the public methods and properties provided by the `Graph` class. 
-* Add to the Makefile _s21_graph_algorithms.a_ target 
-*Prepare full coverage of the `GraphAlgorithms` class methods with unit-tests
-* The class ` GraphAlgorithms ` must contain at least the following public methods:
-    + `depthFirstSearch(Graph &graph, int startVertex)` - a *non-recursive* depth-first search in the graph from a given vertex. The function should return an array that contains the traversed vertices in the order they were traversed. When implementing this function, you must use the *self-written* data structure **stack**, which should be previously made as a separate static library
-    + `breadthFirstSearch(Graph &graph, int startVertex)` - breadth-first search in the graph from a given vertex. The function should return an array that contains the traversed vertices in the order they were traversed. When implementing this function, you must use the *self-written* data structure **queue**, which should be previously made as a separate static library
-* It is necessary to use *self-written* helper classes `Stack` and `Queue` (you can reuse your solution from the *CPP2* project for this). These classes must contain the following methods:
-    + `init()` - creating an empty stack/queue
-    + `push(value)` - adding an element to the stack/queue
-    + `pop()` - getting an element from the stack/queue followed by its removal from the stack/queue
-    + `peek()` - getting an element from the stack/queue without its removal from the stack/queue
-
-*In this and the following tasks, consider that the vertex numbers start from 1*
-
-## Part 2. Finding the shortest paths in a graph
-
-* Add two new methods to the `GraphAlgorithms` class:
-    + `getShortestPathBetweenVertices(Graph &graph, int vertex1, int vertex2)` - searching for the shortest path between two vertices in a graph using *Dijkstra's algorithm*. The function accepts as input the numbers of two vertices and returns a numerical result equal to the smallest distance between them
-    + `getShortestPathsBetweenAllVertices(Graph &graph)` - searching for the shortest paths between all pairs of vertices in a graph using the *Floyd-Warshall algorithm*. As a result, the function returns the matrix of the shortest paths between all vertices of the graph
-
-## Part 3. Finding the minimum spanning tree
-
-* Add a new method to the `GraphAlgorithms` class:
-    + `getLeastSpanningTree(Graph &graph)` - searching for the minimal spanning tree in a graph using *Prim's algorithm*. As a result, the function should return the adjacency matrix for the minimal spanning tree
-
-## Part 4. Travelling salesman problem
-
-* Add a new method to the `GraphAlgorithms` class:
-    + `solveTravelingSalesmanProblem(Graph &graph)` - solving the traveling salesman's problem using the *ant colony algorithm*.
-You need to find the shortest path that goes through all vertices of the graph at least once, followed by a return to the original vertex. As a result, the function should return the `TsmResult` structure described below:
+* Класс `GraphAlgorithms` содержит в себе следующие публичные методы:    
+    + `depthFirstSearch(Graph &graph, int startVertex)` - *нерекурентный* поиск в глубину в графе от заданной вершины. Функция возвращает массив, содержащий в себе обойдённые вершины в порядке их обхода. При реализации этой функции использовалась *самописная* структура данных **стек**, которая оформлена в виде отдельной статической библиотеки.
+    + `breadthFirstSearch(Graph &graph, int startVertex)` - поиск в ширину в графе от заданной вершины. Функция возвращает массив, содержащий в себе обойдённые вершины в порядке их обхода. При реализации этой функции использовалась *самописная* структура данных **очередь**, которая оформлена в виде отдельной статической библиотеки.
+    + `getShortestPathBetweenVertices(Graph &graph, int vertex1, int vertex2)` - поиск кратчайшего пути между двумя вершинами в графе с использованием *алгоритма Дейкстры*. Функция принимает на вход номера двух вершин и возвращает численный результат, равный наименьшему расстоянию между ними.
+    + `getShortestPathsBetweenAllVertices(Graph &graph)` - поиск кратчайших путей между всеми парами вершин в графе с использованием *алгоритма Флойда-Уоршелла*. В качестве результата функция возвращает матрицу кратчайших путей между всеми вершинами графа
+    + `getLeastSpanningTree(Graph &graph)` - поиск наименьшего остовного дерева в графе с помощью *алгоритма Прима*. В качестве результата функция возвращает матрицу смежности для минимального остовного дерева
+    + `solveTravelingSalesmanProblem(Graph &graph)` - решение задачи коммивояжера с помощью *муравьиного алгоритма*. Нахождение самого выгодного (короткого) маршрута, проходящего через все вершины графа хотя бы по одному разу с последующим возвратом в исходную вершину. В качестве результата функция возвращает структуру `TsmResult`, описанную ниже:
+    
     ```cpp
     struct TsmResult {
-        int* vertices;    // an array with the route you are looking for (with the vertex traverse order). Instead of int* you can use std::vector<int>
-        double distance;  // the length of this route
+        int* vertices;    // массив с искомым маршрутом (с порядком обхода вершин). Вместо int* можно использовать std::vector<int>
+        double distance;  // длина этого маршрута
     }
     ``` 
+* Использовались *самописные* вспомогательные классы `Stack` и `Queue`. Эти классы содержат в себе следующие методы:
+    + `init()` - создание пустого стек/очереди
+    + `push(value)` - добавление элемента в стек/очередь
+    + `pop()` - получение элемента из стека/очереди с его последующим удалением из стека/очереди
+    + `peek()` - получение элемента из стека/очереди без его удаления из стека/очереди
 
-*If it is impossible to solve the problem with a given graph, output an error.*
+## Консольный интерфейс
 
-## Part 5. Console interface
-
-* You need to write the main program, which is a console application for testing the functionality of the implemented s21_graph.h and s21_graph_algorithms.h libraries 
-* The console interface must provide the following functionality:
-    1. loading the original graph from a file
-    2. graph traversal in breadth with output of the result to the console   
-    3. graph traversal in depth with output of the result to the console
-    4. searching for the shortest path between any two vertices and displaying the result to the console
-    5. searching for the shortest paths between all pairs of vertices in the graph with the output of the resulting matrix to the console
-    6. searching for the minimal spanning tree in the graph with the output of the resulting adjacency matrix to the console
-    7. solving the salesman problem with the output of the resulting route and its length to the console
-
-## Part 6. Bonus. Comparison of methods for solving the traveling salesman problem
-
-* It is necessary to choose two additional algorithms to solve the traveling salesman problem and implement them as methods of the `GraphAlgorithms` class
-* Add to the console interface the ability to perform a comparison of  speed of the three algorithms (the ant colony algorithm and two randomly selected algorithms)
-    + The study starts for a graph that was previously loaded from a file.
-    + As part of the study you need to keep track of the time it took to solve the salesman's problem `N` times in a row, by each of the algorithms. Where `N` is set from the keyboard.
-    + The results of the time measurement must be displayed in the console.
-
-*Example:* For `N = 1000` it will measure how long it will take to solve the traveling salesman problem 1000 times for the current given graph by an ant colony algorithm and two randomly chosen algorithms.
-
-
-## Chapter IV
-
-`-` "Bob asked if we could take the task, and so we did. I'd love to take you along with it, but Bob has his own ideas," Alice answered Eve's question.
-
-`-` "Still, I don't see how your job has anything to do with a robot vacuum cleaner," Eve complained. "Where's Charlie? He used to drop by at least a couple of times a week."
-
-`-` "Charlie... is working. We've got a little problem, and your pathfinding work is exactly what will help us. Don't worry, when it's all over, our evening gatherings will be back. Then we'll discuss everything," calming, but sadly assured Alice. "Thanks for your time, I have to go. See you later!"
-
-💡 [Tap here](https://forms.yandex.ru/u/635aa038eb61461d3b7defae/) **to leave your feedback on the project**. Pedago Team really tries to make your educational experience better.
+* Написана программу, которая представляет из себя консольное приложение для проверки работоспособности реализованных библиотек s21_graph.h и s21_graph_algorithms.h
+* Консольный интерфейс покрывает следующий функционал:
+    1. загрузка исходного графа из файла.
+    2. обход графа в ширину с выводом результата обхода в консоль.
+    3. обход графа в глубину с выводом результата обхода в консоль.
+    4. поиск кратчайшего пути между произвольными двумя вершинами с выводом результата в консоль.
+    5. поиск кратчайших путей между всеми парами вершин в графе с выводом результирующей матрицы в консоль.
+    6. поиск минимального остовного дерева в графе с выводом результирующей матрицы смежности в консоль.
+    7. решение задачи комивояжера с выводом результирующего маршрута и его длины в консоль.
